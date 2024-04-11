@@ -6,7 +6,6 @@ import (
 	"os"
 	"regexp"
 	"sort"
-	"strings"
 )
 
 func main() {
@@ -17,15 +16,10 @@ func main() {
 	countWords := make(map[string]int)
 	defer file.Close()
 	var scanner = bufio.NewScanner(file)
+	scanner.Split(bufio.ScanWords)
 	for scanner.Scan() {
-		var lowerText = strings.ToLower(scanner.Text())
-
-		regex := regexp.MustCompile("(!|,|\\.|\\?|'|\\)|\\(|–|[0-9]|;|:|)|«|»") // [a-zA-Z]
-
-		lowerText = regex.ReplaceAllString(lowerText, "")
-
-		var strSplit = strings.Fields(lowerText)
-		wordsCountInString(strSplit, countWords)
+		countWords[regexp.MustCompile("(!|,|\\.|\\?|'|\\)|\\(|–|[0-9]|;|:|)|«|»").
+			ReplaceAllString(scanner.Text(), "")]++
 	}
 
 	type key_value struct {
@@ -51,12 +45,4 @@ func main() {
 	if err := scanner.Err(); err != nil {
 		fmt.Println(err)
 	}
-}
-
-func wordsCountInString(strSplit []string, countWords map[string]int) {
-
-	for _, word := range strSplit {
-		countWords[word]++
-	}
-
 }
